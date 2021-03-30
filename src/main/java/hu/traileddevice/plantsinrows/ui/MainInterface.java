@@ -42,71 +42,87 @@ public class MainInterface {
     private static final TileSet icons = Main.getIcons();
     private final Main application;
     private final List<ImageButton> symbolButtons;
-    private final ImageButton commitGuessButton;
-    private final ImageButton resetGuessButton;
-    private final ImageButton newGameButton;
+    private ImageButton commitGuessButton;
+    private ImageButton resetGuessButton;
+    private ImageButton newGameButton;
     private final Color ACTIVE = Color.SIENNA;
     private final Color INACTIVE = Color.DIMGRAY;
     private final Color IN_USE = Color.FIREBRICK;
     private final Color HIGHLIGHT = Color.DARKORANGE;
+    private static final int ROW_COUNT_WITHOUT_GUESS_LIMIT = 7;
+    private static final int FRAME_TOP_BAR_HEIGHT = 2;
+    private static final int LENGTH_TO_INDEX_MODIFIER = -1;
+    private static final int MID_BUTTON_GROUP_HEIGHT = 5;
+    private static final int MID_BUTTON_GROUP_MODIFIER = 1;
 
     public MainInterface(Main application, int tileWidth) {
         symbolButtons = new ArrayList<>();
         icons.changeColor(ACTIVE);
         this.application = application;
+        int gameRowCount = application.getGameSession().getGUESS_LIMIT();
+        int bottomButtonsVerticalOffset = ROW_COUNT_WITHOUT_GUESS_LIMIT + gameRowCount + FRAME_TOP_BAR_HEIGHT
+                + LENGTH_TO_INDEX_MODIFIER;
+        int symbolButtonsVerticalOffset = bottomButtonsVerticalOffset / 2 - MID_BUTTON_GROUP_HEIGHT / 2
+                + MID_BUTTON_GROUP_MODIFIER;
 
+        addDragBar(application, tileWidth);
+        ImageButtonFactory imageButtonFactory = new ImageButtonFactory(application.getStackPane(), icons, tileWidth,
+                ACTIVE, IN_USE);
+        addButtons(bottomButtonsVerticalOffset, symbolButtonsVerticalOffset, imageButtonFactory);
+    }
+
+    private void addDragBar(Main application, int tileWidth) {
         DragBar dragBar = new DragBar(application.getPrimaryStage().getWidth(),
                 tileWidth * 2 - Main.getVISUAL_CORRECTION_FOR_SCROLL_TOP(), application.getPrimaryStage());
         application.getStackPane().getChildren().add(dragBar);
         StackPane.setMargin(dragBar, new Insets(0, 0, 0, 0));
         dragBar.setAlignment(Pos.CENTER);
         dragBar.getChildren().add(new Label("This is a test build of Plants in Rows. Intended for internal use only."));
+    }
 
-        ImageButtonFactory imageButtonFactory = new ImageButtonFactory(application.getStackPane(), icons, tileWidth,
-                ACTIVE, IN_USE);
-
-        ImageButton exitButton = imageButtonFactory.createImageButton(3, 2, 1,
+    private void addButtons(int bottomButtonsVerticalOffset, int symbolButtonVerticalOffset, ImageButtonFactory imageButtonFactory) {
+        ImageButton exitButton = imageButtonFactory.createImageButton(3, FRAME_TOP_BAR_HEIGHT, 1,
                 "Exit");
         exitButton.setOnAction(ignoredEvent -> Platform.exit());
-        newGameButton = imageButtonFactory.createImageButton(4, 2, 2,
+        newGameButton = imageButtonFactory.createImageButton(4, FRAME_TOP_BAR_HEIGHT, 2,
                 "New game!");
         newGameButton.setOnAction(this::newGame);
 
-        ImageButton symbolOneButton = imageButtonFactory.createImageButton(5, 8,
+        ImageButton symbolOneButton = imageButtonFactory.createImageButton(5, symbolButtonVerticalOffset,
                 2, "Pumpkin");
         symbolOneButton.setOnAction(ignoreEvent -> addSymbol(Symbol.ONE));
         symbolButtons.add(symbolOneButton);
-        ImageButton symbolTwoButton = imageButtonFactory.createImageButton(10, 8,
+        ImageButton symbolTwoButton = imageButtonFactory.createImageButton(10, symbolButtonVerticalOffset,
                 1, "Water-melon");
         symbolTwoButton.setOnAction(ignoreEvent -> addSymbol(Symbol.TWO));
         symbolButtons.add(symbolTwoButton);
-        ImageButton symbolThreeButton = imageButtonFactory.createImageButton(9, 9,
-                1, "Tomato");
+        ImageButton symbolThreeButton = imageButtonFactory.createImageButton(9,
+                symbolButtonVerticalOffset + 1,1, "Tomato");
         symbolThreeButton.setOnAction(ignoreEvent -> addSymbol(Symbol.THREE));
         symbolButtons.add(symbolThreeButton);
-        ImageButton symbolFourButton = imageButtonFactory.createImageButton(0, 10,
-                2, "Eggplant");
+        ImageButton symbolFourButton = imageButtonFactory.createImageButton(0,
+                symbolButtonVerticalOffset + 2,2, "Eggplant");
         symbolFourButton.setOnAction(ignoreEvent -> addSymbol(Symbol.FOUR));
         symbolButtons.add(symbolFourButton);
-        ImageButton symbolFiveButton = imageButtonFactory.createImageButton(2, 10,
-                1, "Cauliflower");
+        ImageButton symbolFiveButton = imageButtonFactory.createImageButton(2,
+                symbolButtonVerticalOffset + 2,1, "Cauliflower");
         symbolFiveButton.setOnAction(ignoreEvent -> addSymbol(Symbol.FIVE));
         symbolButtons.add(symbolFiveButton);
-        ImageButton symbolSixButton = imageButtonFactory.createImageButton(1, 9,
-                2, "Yellow bell pepper");
+        ImageButton symbolSixButton = imageButtonFactory.createImageButton(1,
+                symbolButtonVerticalOffset + 1,2, "Yellow bell pepper");
         symbolSixButton.setOnAction(ignoreEvent -> addSymbol(Symbol.SIX));
         symbolButtons.add(symbolSixButton);
 
-        commitGuessButton = imageButtonFactory.createImageButton(8, 12, 1,
-                "Commit guess!");
+        commitGuessButton = imageButtonFactory.createImageButton(8,
+                symbolButtonVerticalOffset + 4, 1,"Commit guess!");
         commitGuessButton.setOnAction(this::commitGuess);
         commitGuessButton.changeColor(INACTIVE);
-        resetGuessButton = imageButtonFactory.createImageButton(7, 12, 2,
-                "Reset guess!");
+        resetGuessButton = imageButtonFactory.createImageButton(7,
+                symbolButtonVerticalOffset + 4, 2,"Reset guess!");
         resetGuessButton.setOnAction(this::clearGuess);
         resetGuessButton.changeColor(INACTIVE);
-        ImageButton infoButton = imageButtonFactory.createImageButton(6, 18, 1,
-                "Info");
+        ImageButton infoButton = imageButtonFactory.createImageButton(6, bottomButtonsVerticalOffset,
+                1,"Info");
         infoButton.setOnAction(this::displayInfo);
     }
 
