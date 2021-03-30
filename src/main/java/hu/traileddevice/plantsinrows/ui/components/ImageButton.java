@@ -31,7 +31,6 @@ public class ImageButton extends Button {
     private final TileSet tileSet;
     private final int dimensions;
     private final int locationInTileSet;
-    private ImageView icon;
     private final Rectangle2D viewportRect;
     private final Color originalColor;
     private Color currentColor;
@@ -39,16 +38,13 @@ public class ImageButton extends Button {
     public ImageButton(TileSet tileSet, int dimensions, int locationInTileSet, Color originalColor, Color pressedColor) {
         this.tileSet = tileSet;
         this.dimensions = dimensions;
+        this.originalColor = originalColor;
         this.locationInTileSet = locationInTileSet;
-        this.icon = new ImageView(tileSet.getImage());
         this.viewportRect = new Rectangle2D(locationInTileSet * dimensions, 0,
                 dimensions, dimensions);
-        icon.setViewport(viewportRect);
-        this.setGraphic(icon);
+        revertToOriginalColor();
         this.hoverProperty().addListener(event -> this.setCursor(Cursor.HAND));
 
-        this.originalColor = originalColor;
-        this.currentColor = this.originalColor;
         this.setOnMousePressed(event -> changeColorTemporarily(pressedColor));
         this.setOnMouseReleased(event -> changeColorTemporarily(this.currentColor));
     }
@@ -60,7 +56,7 @@ public class ImageButton extends Button {
 
     public void changeColorTemporarily(Color newColor) {
         tileSet.changeColorOfPart(newColor, locationInTileSet * dimensions, 0);
-        icon = new ImageView(tileSet.getImage());
+        ImageView icon = new ImageView(tileSet.getImage());
         icon.setViewport(viewportRect);
         this.setGraphic(icon);
     }
