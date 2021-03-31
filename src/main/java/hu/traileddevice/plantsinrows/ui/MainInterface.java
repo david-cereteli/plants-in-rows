@@ -86,7 +86,7 @@ public class MainInterface {
     private void addButtons(int bottomButtonsVerticalOffset, int symbolButtonVerticalOffset, ImageButtonFactory imageButtonFactory) {
         ImageButton exitButton = imageButtonFactory.createImageButton(3, FRAME_TOP_BAR_HEIGHT, 1,
                 "Exit");
-        exitButton.setOnAction(ignoredEvent -> Platform.exit());
+        exitButton.setOnAction(this::exitGame);
         newGameButton = imageButtonFactory.createImageButton(4, FRAME_TOP_BAR_HEIGHT, 2,
                 "New game!");
         newGameButton.setOnAction(this::newGame);
@@ -195,5 +195,13 @@ public class MainInterface {
     private void displayInfo(ActionEvent ignoredEvent) {
         AboutWindow aboutWindow = new AboutWindow(application.getPrimaryStage());
         aboutWindow.display();
+    }
+
+    private void exitGame(ActionEvent ignoredEvent) {
+        QuitConfirmWindow exitWindow = new QuitConfirmWindow(application.getPrimaryStage());
+        exitWindow.display();
+        if (exitWindow.isShouldExit()) {
+            Platform.exit();
+        }
     }
 }
