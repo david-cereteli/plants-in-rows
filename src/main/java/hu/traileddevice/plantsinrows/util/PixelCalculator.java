@@ -18,14 +18,14 @@
  * along with Plants in Rows.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package hu.traileddevice.plantsinrows.ui.components.text;
+package hu.traileddevice.plantsinrows.util;
 
-import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 
-public class Fonts {
-    public static final Font BOLD = Font.font("Georgia", FontWeight.BOLD, FontPosture.REGULAR, 14);
-    public static final Font REGULAR = Font.font("Georgia", FontWeight.NORMAL, FontPosture.REGULAR, 14);
-    public static final Font LARGE_REGULAR = Font.font("Georgia", FontWeight.NORMAL, FontPosture.REGULAR, 16);
+public class PixelCalculator {
+
+    public static double getStringLength(String str) {
+        Text text = new Text(str);
+        return text.getLayoutBounds().getWidth();
+    }
 }

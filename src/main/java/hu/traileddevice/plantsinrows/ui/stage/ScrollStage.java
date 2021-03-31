@@ -26,6 +26,7 @@ import hu.traileddevice.plantsinrows.ui.components.DragBar;
 import hu.traileddevice.plantsinrows.ui.components.ImageButton;
 import hu.traileddevice.plantsinrows.ui.components.ImageButtonFactory;
 import javafx.beans.value.ChangeListener;
+import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -37,6 +38,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.Getter;
 
+import java.util.function.Consumer;
+
 public class ScrollStage extends Stage {
     private static final int TILE_SIZE = Main.getTILE_WIDTH();
     @Getter private final StackPane stackPane;
@@ -46,6 +49,7 @@ public class ScrollStage extends Stage {
     private final int HEIGHT;
     private boolean hasDragBar;
     private boolean hasCloseButton;
+    private boolean hasYesNoButtons;
 
     public ScrollStage(int width, int height, Stage parentStage) {
         super(StageStyle.TRANSPARENT);
@@ -118,5 +122,21 @@ public class ScrollStage extends Stage {
                 WIDTH / 2, buttonText);
         exitButton.setOnAction(ignoreEvent -> this.close());
         hasCloseButton = true;
+    }
+
+    public void addYesNoButtons(String yesText, String noText, Consumer<ActionEvent> yesFunction,
+                                Consumer<ActionEvent> noFunction) {
+        if (hasYesNoButtons) {
+            throw new IllegalStateException("addYesNoButtons() already called.");
+        }
+        ImageButtonFactory imageButtonFactory = new ImageButtonFactory(stackPane, Main.getIcons(), TILE_SIZE,
+                Color.SIENNA, Color.GREENYELLOW);
+        ImageButton yesButton = imageButtonFactory.createImageButton(8, HEIGHT - 2,
+                WIDTH / 2 - 1, yesText);
+        ImageButton noButton = imageButtonFactory.createImageButton(7, HEIGHT - 2,
+                WIDTH / 2 + 1, noText);
+        yesButton.setOnAction(yesFunction::accept);
+        noButton.setOnAction(noFunction::accept);
+        hasYesNoButtons = true;
     }
 }

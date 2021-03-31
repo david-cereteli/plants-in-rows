@@ -22,6 +22,7 @@ package hu.traileddevice.plantsinrows.ui;
 
 import hu.traileddevice.plantsinrows.Main;
 import hu.traileddevice.plantsinrows.graphics.TileSet;
+import hu.traileddevice.plantsinrows.logic.Difficulty;
 import hu.traileddevice.plantsinrows.logic.GameState;
 import hu.traileddevice.plantsinrows.logic.Symbol;
 import hu.traileddevice.plantsinrows.ui.components.DragBar;
@@ -32,8 +33,10 @@ import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
+import lombok.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -169,14 +172,24 @@ public class MainInterface {
     }
 
     private void newGame(ActionEvent ignoredEvent) {
-        application.getGameSession().reset();
-
-        symbolButtons.forEach(button -> button.changeColor(ACTIVE));
-        commitGuessButton.changeColor(INACTIVE);
-        resetGuessButton.changeColor(INACTIVE);
-        newGameButton.revertToOriginalColor();
-
-        application.refresh();
+        NewGameWindow newGameWindow = new NewGameWindow(application.getPrimaryStage());
+        newGameWindow.display();
+        if (newGameWindow.isShouldStartNew()) {
+            Difficulty newDifficulty =
+                    Difficulty.getEnum(((RadioButton)newGameWindow.getDifficultyGroup().getSelectedToggle()).getText());
+            if (newDifficulty.equals(Main.getDifficulty())) {
+                application.getGameSession().reset();
+                symbolButtons.forEach(button -> button.changeColor(ACTIVE));
+                commitGuessButton.changeColor(INACTIVE);
+                resetGuessButton.changeColor(INACTIVE);
+                newGameButton.revertToOriginalColor();
+                application.refresh();
+            } else {
+                Main.setDifficulty(newDifficulty);
+                application.getPrimaryStage().hide();
+                application.setupGame(application.getPrimaryStage());
+            }
+        }
     }
 
     private void displayInfo(ActionEvent ignoredEvent) {

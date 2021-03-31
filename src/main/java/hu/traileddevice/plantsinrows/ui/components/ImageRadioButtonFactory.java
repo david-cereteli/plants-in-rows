@@ -18,14 +18,25 @@
  * along with Plants in Rows.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package hu.traileddevice.plantsinrows.ui.components.text;
+package hu.traileddevice.plantsinrows.ui.components;
 
-import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight;
+import hu.traileddevice.plantsinrows.graphics.TileSet;
+import javafx.scene.paint.Color;
 
-public class Fonts {
-    public static final Font BOLD = Font.font("Georgia", FontWeight.BOLD, FontPosture.REGULAR, 14);
-    public static final Font REGULAR = Font.font("Georgia", FontWeight.NORMAL, FontPosture.REGULAR, 14);
-    public static final Font LARGE_REGULAR = Font.font("Georgia", FontWeight.NORMAL, FontPosture.REGULAR, 16);
+public class ImageRadioButtonFactory {
+    private final TileSet tileSet;
+    private final int dimensions;
+    private final Color selected;
+    private final Color unselected;
+
+    public ImageRadioButtonFactory(TileSet tileSet, int dimensions, Color selected, Color unselected) {
+        this.tileSet = tileSet;
+        this.dimensions = dimensions;
+        this.selected = selected;
+        this.unselected = unselected;
+    }
+
+    public ImageRadioButton createImageRadioButton(int locationInTileSet, String text) {
+        return new ImageRadioButton(tileSet, dimensions, locationInTileSet, selected, unselected, text);
+    }
 }

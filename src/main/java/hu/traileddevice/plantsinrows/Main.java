@@ -24,6 +24,7 @@ import hu.traileddevice.plantsinrows.graphics.TileSet;
 import hu.traileddevice.plantsinrows.graphics.layers.background.BackgroundZones;
 import hu.traileddevice.plantsinrows.graphics.layers.frame.FrameLayer;
 import hu.traileddevice.plantsinrows.graphics.layers.game.GameZones;
+import hu.traileddevice.plantsinrows.logic.Difficulty;
 import hu.traileddevice.plantsinrows.logic.GameSession;
 import hu.traileddevice.plantsinrows.ui.MainInterface;
 import javafx.application.Application;
@@ -37,6 +38,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.Getter;
+import lombok.Setter;
 
 public class Main extends Application {
     @Getter private static TileSet icons;
@@ -51,6 +53,7 @@ public class Main extends Application {
     private GameZones gameZones;
     @Getter private GameSession gameSession;
     @Getter private static HostServices services;
+    @Getter @Setter private static Difficulty difficulty = Difficulty.EASY;
 
     public static void main(String[] args) {
         launch(args);
@@ -59,12 +62,17 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         services = getHostServices();
-
         this.primaryStage = primaryStage;
         gameIcon = new Image("/tilesets/farmer.png");
         icons = new TileSet("/tilesets/icons.png", 352, 32);
+        primaryStage.initStyle(StageStyle.TRANSPARENT);
+        primaryStage.setTitle("Plants in Rows");
+        primaryStage.getIcons().add(gameIcon);
+        setupGame(primaryStage);
+    }
 
-        gameSession = new GameSession();
+    public void setupGame(Stage primaryStage) {
+        gameSession = new GameSession(difficulty);
         int gameRowCount = gameSession.getGUESS_LIMIT();
         int gameColumnCount = gameSession.getSEQUENCE_LENGTH();
 
@@ -85,10 +93,6 @@ public class Main extends Application {
 
         primaryStage.setScene(scene);
         refresh();
-
-        primaryStage.setTitle("Plants in Rows");
-        primaryStage.getIcons().add(gameIcon);
-        primaryStage.initStyle(StageStyle.TRANSPARENT);
         scene.setFill(null);
         primaryStage.show();
     }

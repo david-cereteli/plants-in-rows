@@ -18,14 +18,30 @@
  * along with Plants in Rows.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package hu.traileddevice.plantsinrows.ui.components.text;
+package hu.traileddevice.plantsinrows.logic;
 
-import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight;
+public enum Difficulty {
+    EASY(4, 10),
+    NORMAL(4, 8),
+    HARD(4,6);
 
-public class Fonts {
-    public static final Font BOLD = Font.font("Georgia", FontWeight.BOLD, FontPosture.REGULAR, 14);
-    public static final Font REGULAR = Font.font("Georgia", FontWeight.NORMAL, FontPosture.REGULAR, 14);
-    public static final Font LARGE_REGULAR = Font.font("Georgia", FontWeight.NORMAL, FontPosture.REGULAR, 16);
+    private final int SEQUENCE_LENGTH;
+    private final int GUESS_LIMIT;
+
+    Difficulty(int sequenceLength, int guessLimit) {
+        this.SEQUENCE_LENGTH = sequenceLength;
+        this.GUESS_LIMIT = guessLimit;
+    }
+
+    public int getSEQUENCE_LENGTH() {
+        return SEQUENCE_LENGTH;
+    }
+
+    public int getGUESS_LIMIT() {
+        return GUESS_LIMIT;
+    }
+
+    public static Difficulty getEnum(String enumStr) {
+        return Difficulty.valueOf(enumStr.toUpperCase());
+    }
 }

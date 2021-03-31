@@ -21,46 +21,54 @@
 package hu.traileddevice.plantsinrows.ui.components;
 
 import hu.traileddevice.plantsinrows.graphics.TileSet;
+import javafx.beans.value.ChangeListener;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
-import javafx.scene.control.Button;
+import javafx.scene.control.RadioButton;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 
-public class ImageButton extends Button {
+import static hu.traileddevice.plantsinrows.ui.components.text.Fonts.REGULAR;
+
+public class ImageRadioButton extends RadioButton {
     private final TileSet tileSet;
     private final int dimensions;
     private final int locationInTileSet;
     private final Rectangle2D viewportRect;
-    private final Color originalColor;
-    private Color currentColor;
+    private final Color selectedColor;
+    private final Color unselectedColor;
 
-    public ImageButton(TileSet tileSet, int dimensions, int locationInTileSet, Color originalColor, Color pressedColor) {
+    public ImageRadioButton(TileSet tileSet, int dimensions, int locationInTileSet, Color selectedColor, Color unselectedColor,
+                            String text) {
+        super(text);
+        this.getStyleClass().remove("radio-button");
+        this.setFont(REGULAR);
+        this.selectedColor = selectedColor;
+        this.unselectedColor = unselectedColor;
         this.tileSet = tileSet;
         this.dimensions = dimensions;
-        this.originalColor = originalColor;
         this.locationInTileSet = locationInTileSet;
         this.viewportRect = new Rectangle2D(locationInTileSet * dimensions, 0, dimensions, dimensions);
-        revertToOriginalColor();
+
+        changeColor(unselectedColor);
+
         this.hoverProperty().addListener(event -> this.setCursor(Cursor.HAND));
 
-        this.setOnMousePressed(event -> changeColorTemporarily(pressedColor));
-        this.setOnMouseReleased(event -> changeColorTemporarily(this.currentColor));
+        ChangeListener<Boolean> selectedListener = (ignoredObservable, ignoredOldValue, newValue) -> {
+            if (newValue) {
+                changeColor(this.selectedColor);
+            } else {
+                changeColor(this.unselectedColor);
+            }
+        };
+
+        this.selectedProperty().addListener(selectedListener);
     }
 
     public void changeColor(Color newColor) {
-        this.currentColor = newColor;
-        changeColorTemporarily(newColor);
-    }
-
-    public void changeColorTemporarily(Color newColor) {
         tileSet.changeColorOfPart(newColor, locationInTileSet * dimensions, 0);
         ImageView icon = new ImageView(tileSet.getImage());
         icon.setViewport(viewportRect);
         this.setGraphic(icon);
-    }
-
-    public void revertToOriginalColor() {
-        changeColor(originalColor);
     }
 }

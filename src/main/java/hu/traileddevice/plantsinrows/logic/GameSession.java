@@ -52,6 +52,10 @@ public class GameSession {
         this(DEFAULT_SEQUENCE_LENGTH, DEFAULT_GUESS_LIMIT);
     }
 
+    public GameSession(Difficulty difficulty) {
+        this(difficulty.getSEQUENCE_LENGTH(), difficulty.getGUESS_LIMIT());
+    }
+
     public void reset() {
         for (int i = 0; i < SEQUENCE_LENGTH; i++) {
             Arrays.fill(guesses[i], null);
