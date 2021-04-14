@@ -58,7 +58,7 @@ $ mvn clean install
 
 Change into the `target` folder and execute:
 ```console
-$ java -jar plantsinrows-1.0
+$ java -jar plantsinrows-1.0.jar
 ```
 
 
