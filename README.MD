@@ -6,9 +6,9 @@ A clone of the board game, [Mastermind](https://en.wikipedia.org/wiki/Mastermind
 
 * [How to play](#How-to-play)
 * [How to run](#How-to-run)
-    * [1. IDE](#1.-IDE)
-    * [2. Command line](#2.-Command-line)
-    * [3. Jar](#3.-Jar)
+    * [1. IDE](#1-IDE)
+    * [2. Command line](#2-Command-line)
+    * [3. Jar](#3-Jar)
 * [Dependencies](#Dependencies)
 * [License](#License)
 * [Attribution and licenses of art assets](#Attribution-and-licenses-of-art-assets)
